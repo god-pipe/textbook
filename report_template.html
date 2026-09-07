@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="{{ 'ja' if language == 'Japanese' else 'en' }}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ period_label_line1 }} — Creator Intelligence Magazine</title>
+{% if assets.favicon %}<link rel="icon" href="{{ assets.favicon }}">{% endif %}
+<style>
+  :root {
+    --bg: #0b0c10;
+    --surface: #14161c;
+    --surface-2: #1b1e26;
+    --text: #f2f0ea;
+    --muted: #9a9ba3;
+    --accent: #ff5a5f;
+    --accent-2: #f4c95d;
+    --divider: #2a2d36;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, "Segoe UI", "Hiragino Sans", "Noto Sans JP", Arial, sans-serif;
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+  a { color: inherit; }
+  img { max-width: 100%; display: block; }
+
+  /* ---------- Cover ---------- */
+  .cover {
+    position: relative;
+    min-height: 92vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: clamp(24px, 6vw, 72px);
+    overflow: hidden;
+    border-bottom: 1px solid var(--divider);
+  }
+  .cover-media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+  .cover-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.55;
+  }
+  .cover-media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(11,12,16,0.15) 0%, rgba(11,12,16,0.55) 45%, var(--bg) 96%);
+  }
+  .cover-content { position: relative; z-index: 1; max-width: 980px; }
+  .cover-kicker {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--accent-2);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    font-size: clamp(11px, 1.4vw, 13px);
+    font-weight: 700;
+    margin-bottom: 18px;
+  }
+  .cover-kicker img { height: 28px; width: auto; }
+  .cover-title {
+    font-size: clamp(42px, 9vw, 96px);
+    line-height: 0.95;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin: 0 0 18px;
+    text-transform: uppercase;
+  }
+  .cover-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 22px;
+    align-items: center;
+    color: var(--muted);
+    font-size: clamp(13px, 1.6vw, 16px);
+    margin-bottom: 22px;
+  }
+  .cover-meta .issue-pill {
+    background: var(--accent);
+    color: #1a0a0a;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 999px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-size: 12px;
+  }
+  .cover-tagline {
+    color: var(--text);
+    font-size: clamp(12px, 1.5vw, 14px);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.8;
+    margin-bottom: 28px;
+  }
+  .cover-topstory {
+    border-top: 1px solid rgba(242,240,234,0.25);
+    padding-top: 18px;
+    max-width: 640px;
+  }
+  .cover-topstory .label {
+    color: var(--accent);
+    font-weight: 700;
+    letter-spacing: 2px;
+    font-size: 12px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .cover-topstory h2 { margin: 0 0 8px; font-size: clamp(18px, 2.6vw, 26px); }
+  .cover-topstory p { margin: 0; color: var(--muted); font-size: 14.5px; }
+
+  /* ---------- Layout shell ---------- */
+  .container { max-width: 1040px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 32px) 100px; }
+  section { margin-top: 64px; }
+  .section-label {
+    display: inline-block;
+    color: var(--accent-2);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-size: 12.5px;
+    font-weight: 700;
+    border-bottom: 2px solid var(--accent-2);
+    padding-bottom: 6px;
+    margin-bottom: 24px;
+  }
+
+  /* ---------- Pulse grid ---------- */
+  .pulse-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+  }
+  .pulse-item {
+    background: var(--surface);
+    border: 1px solid var(--divider);
+    border-radius: 12px;
+    padding: 16px 18px;
+  }
+  .pulse-item .pulse-label {
+    font-size: 11.5px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .pulse-item .pulse-value { font-size: 16px; font-weight: 600; }
+
+  /* ---------- Event cards (hero / featured / card share this) ---------- */
+  .event {
+    background: var(--surface);
+    border: 1px solid var(--divider);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 22px;
+  }
+  .event-media { position: relative; background: var(--surface-2); }
+  .event--hero .event-media { aspect-ratio: 16/9; }
+  .event--featured .event-media { aspect-ratio: 16/10; }
+  .event--card .event-media { aspect-ratio: 21/9; }
+  .event-media img { width: 100%; height: 100%; object-fit: cover; }
+  .img-placeholder {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: repeating-linear-gradient(135deg, var(--surface-2), var(--surface-2) 12px, #20232c 12px, #20232c 24px);
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-align: center;
+    text-transform: uppercase;
+  }
+  .event-badge {
+    position: absolute; top: 12px; left: 12px;
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(11,12,16,0.75);
+    backdrop-filter: blur(4px);
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .badge-icon { height: 14px; width: 14px; object-fit: contain; }
+  .platform-pill {
+    position: absolute; top: 12px; right: 12px;
+    background: rgba(11,12,16,0.75);
+    backdrop-filter: blur(4px);
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 12.5px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .trust-badge {
+    position: absolute; top: 46px; right: 12px;
+    background: rgba(77, 208, 225, 0.15);
+    border: 1px solid rgba(77, 208, 225, 0.4);
+    color: var(--accent-2-2, #4dd0e1);
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+  .event-body { padding: clamp(18px, 3vw, 28px); }
+  .event-eyebrow {
+    color: var(--accent);
+    font-weight: 700;
+    letter-spacing: 2px;
+    font-size: 12px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .event--hero .event-title { font-size: clamp(24px, 4vw, 34px); }
+  .event--featured .event-title { font-size: clamp(19px, 2.6vw, 23px); }
+  .event--card .event-title { font-size: clamp(17px, 2.2vw, 20px); }
+  .event-title { margin: 0 0 10px; font-weight: 700; line-height: 1.25; }
+  .event-summary { color: var(--text); font-size: 15px; opacity: 0.92; margin: 0 0 18px; }
+
+  .event-fields { display: flex; flex-direction: column; gap: 14px; margin-bottom: 18px; }
+  .field-tag {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--accent-2);
+    font-weight: 700;
+    margin-bottom: 3px;
+  }
+  .event-fields p { margin: 0; font-size: 14.5px; color: var(--text); opacity: 0.9; }
+
+  .creator-row {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px;
+    border-top: 1px solid var(--divider);
+    padding-top: 14px;
+    margin-bottom: 14px;
+  }
+  .creator-link { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    object-fit: cover;
+    background: var(--surface-2);
+  }
+  .avatar--initial {
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 14px;
+    color: var(--bg);
+    background: var(--accent-2);
+  }
+  .creator-name { font-size: 14.5px; font-weight: 600; }
+  .score-pill {
+    background: var(--surface-2);
+    border: 1px solid var(--divider);
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--accent-2);
+    white-space: nowrap;
+  }
+
+  .cta-button {
+    display: inline-block;
+    background: var(--accent);
+    color: #1a0a0a;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 10px 20px;
+    border-radius: 999px;
+    text-decoration: none;
+    margin-bottom: 6px;
+  }
+
+  details.more-analysis { margin-top: 14px; }
+  details.more-analysis summary {
+    cursor: pointer;
+    list-style: none;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  details.more-analysis summary::-webkit-details-marker { display: none; }
+  details.more-analysis[open] summary { color: var(--accent-2); }
+  .more-analysis-body { padding-top: 12px; font-size: 14px; color: var(--muted); }
+  .more-analysis-body p { margin: 0 0 12px; }
+  .more-analysis-body strong { color: var(--text); }
+  .opp-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    margin: 10px 0;
+  }
+  .opp-grid > div {
+    background: var(--surface-2);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+  .opp-grid strong { display: block; color: var(--accent-2); font-size: 11.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .confidence { color: #ffb74d !important; }
+  .all-sources a { color: var(--accent-2); margin-right: 8px; text-decoration: none; }
+
+  /* ---------- Featured row ---------- */
+  .featured-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  @media (max-width: 760px) {
+    .featured-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ---------- Editorial text blocks ---------- */
+  .editorial-block {
+    background: var(--surface);
+    border: 1px solid var(--divider);
+    border-radius: 14px;
+    padding: 22px 26px;
+    color: var(--text);
+    opacity: 0.95;
+    font-size: 15px;
+    white-space: pre-line;
+  }
+
+  /* ---------- Sources overview (MOD debug info, kept subtle) ---------- */
+  .sources-overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 10px;
+  }
+  .sources-overview .src-box {
+    background: var(--surface-2);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+  .sources-overview .src-box .src-name { color: var(--text); font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: 1px; }
+
+  footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 12.5px;
+    padding: 30px;
+    border-top: 1px solid var(--divider);
+  }
+
+  /* ---------- Test-tier warning banner ---------- */
+  .test-tier-banner {
+    background: repeating-linear-gradient(135deg, #3a2a0a, #3a2a0a 14px, #2e2107 14px, #2e2107 28px);
+    border-bottom: 2px solid #ffb74d;
+    color: #ffd699;
+    padding: 14px clamp(16px, 4vw, 32px);
+    font-size: 13.5px;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  /* ---------- Twitch Pulse ---------- */
+  .twitch-pulse-note {
+    font-size: 12.5px;
+    color: var(--muted);
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+  .tp-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  @media (max-width: 760px) { .tp-grid { grid-template-columns: 1fr; } }
+  .tp-card {
+    background: var(--surface);
+    border: 1px solid var(--divider);
+    border-radius: 14px;
+    padding: 18px 20px;
+  }
+  .tp-card h4 {
+    margin: 0 0 14px;
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--accent-2);
+  }
+  .tp-clip-media { position: relative; border-radius: 10px; overflow: hidden; aspect-ratio: 16/9; background: var(--surface-2); margin-bottom: 10px; }
+  .tp-clip-media img { width: 100%; height: 100%; object-fit: cover; }
+  .tp-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--divider);
+    font-size: 13.5px;
+    gap: 10px;
+  }
+  .tp-row:last-child { border-bottom: none; }
+  .tp-row .tp-name { font-weight: 600; }
+  .tp-row .tp-sub { color: var(--muted); font-size: 12px; }
+  .tp-row .tp-count { color: var(--accent-2); font-weight: 700; white-space: nowrap; }
+  .tp-row a { text-decoration: none; }
+
+  /* ---------- Meme Pulse ---------- */
+  .meme-pulse-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+  }
+  .meme-card {
+    background: var(--surface);
+    border: 1px solid var(--divider);
+    border-radius: 12px;
+    overflow: hidden;
+    text-decoration: none;
+    display: block;
+  }
+  .meme-card .meme-media { aspect-ratio: 16/10; background: var(--surface-2); }
+  .meme-card .meme-media img { width: 100%; height: 100%; object-fit: cover; }
+  .meme-card .meme-body { padding: 12px 14px; }
+  .meme-card .meme-title { font-size: 13.5px; font-weight: 600; margin-bottom: 6px; line-height: 1.3; }
+  .meme-card .meme-meta { font-size: 11.5px; color: var(--muted); }
+</style>
+</head>
+<body>
+
+{% if is_test_tier %}
+<div class="test-tier-banner">
+  ⚠️ TEST-TIER ANALYSIS — generated with {{ ai_provider_used }}, a free model with an
+  outdated knowledge cutoff. This is for previewing output format/quality only.
+  Do NOT publish this as real creator intelligence — re-run with Gemini first.
+</div>
+{% endif %}
+
+<!-- ================= COVER ================= -->
+<div class="cover">
+  <div class="cover-media">
+    {% if hero_event and hero_event.img_primary %}
+    <img src="{{ hero_event.img_primary }}" data-fallback="{{ hero_event.img_fallback }}" alt="" onerror="handleImgError(this)">
+    {% endif %}
+    <div class="img-placeholder" style="display:none; position:absolute; inset:0; background:var(--bg);"></div>
+  </div>
+  <div class="cover-content">
+    <div class="cover-kicker">
+      {% if assets.logo %}<img src="{{ assets.logo }}" alt="">{% endif %}
+      <span>Creator Intelligence Magazine</span>
+    </div>
+    <h1 class="cover-title">Creator<br>Intelligence</h1>
+    <div class="cover-meta">
+      <span class="issue-pill">{{ period_label_line1 }}</span>
+      <span>{{ cover_date_label }}</span>
+    </div>
+    <div class="cover-tagline">This week in {{ cover_tagline }}</div>
+
+    {% if hero_event %}
+    <div class="cover-topstory">
+      <div class="label">This Issue's Top Story</div>
+      <h2>{{ hero_event.event_title }}</h2>
+      <p>{{ hero_event.summary }}</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ================= PULSE ================= -->
+  <section>
+    <div class="section-label">This Week's Creator Pulse</div>
+    <div class="pulse-grid">
+      <div class="pulse-item"><div class="pulse-label">🔥 Top Trend</div><div class="pulse-value">{{ pulse.top_trend }}</div></div>
+      <div class="pulse-item"><div class="pulse-label">📺 Hot Platform</div><div class="pulse-value">{{ pulse.hot_platform }}</div></div>
+      <div class="pulse-item"><div class="pulse-label">👤 Creator to Watch</div><div class="pulse-value">{{ pulse.creator_to_watch }}</div></div>
+      <div class="pulse-item"><div class="pulse-label">🌍 Japan × US Topic</div><div class="pulse-value">{{ pulse.cross_culture_topic }}</div></div>
+      <div class="pulse-item"><div class="pulse-label">⚡ Emerging Topic</div><div class="pulse-value">{{ pulse.emerging_topic }}</div></div>
+    </div>
+  </section>
+
+  <!-- ================= PERIOD OVERVIEW ================= -->
+  <section>
+    <div class="section-label">Period Summary</div>
+    <div class="editorial-block">{{ analysis.period_overview }}</div>
+  </section>
+
+  <!-- ================= HERO STORY ================= -->
+  {% if hero_event %}
+  <section>
+    <div class="section-label">Hero Story</div>
+    {% with ev = hero_event, size = 'hero' %}{% include "_event_card.html" %}{% endwith %}
+  </section>
+  {% endif %}
+
+  <!-- ================= FEATURED ================= -->
+  {% if featured_events %}
+  <section>
+    <div class="section-label">Featured Stories</div>
+    <div class="featured-grid">
+      {% for ev in featured_events %}
+        {% with size = 'featured' %}{% include "_event_card.html" %}{% endwith %}
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- ================= MAGAZINE CARDS ================= -->
+  {% if card_events %}
+  <section>
+    <div class="section-label">More Trending Stories</div>
+    {% for ev in card_events %}
+      {% with size = 'card' %}{% include "_event_card.html" %}{% endwith %}
+    {% endfor %}
+  </section>
+  {% endif %}
+
+  <!-- ================= TWITCH PULSE ================= -->
+  {% if twitch_pulse %}
+  <section>
+    <div class="section-label">This Week on Twitch</div>
+    <div class="twitch-pulse-note">{{ twitch_pulse.scope_note }} (snapshot collected {{ twitch_pulse.collected_at }})</div>
+
+    <div class="tp-grid">
+      <div class="tp-card">
+        <h4>🏆 Most-Viewed Clip</h4>
+        {% if twitch_pulse.top_clip %}
+        <div class="tp-clip-media">
+          {% if twitch_pulse.top_clip.thumbnail_url %}
+          <img src="{{ twitch_pulse.top_clip.thumbnail_url }}" alt="">
+          {% endif %}
+        </div>
+        <div class="tp-row" style="border:none; padding-top:0;">
+          <div>
+            <div class="tp-name"><a href="{{ twitch_pulse.top_clip.url }}" target="_blank" rel="noopener">{{ twitch_pulse.top_clip.title }}</a></div>
+            <div class="tp-sub">{{ twitch_pulse.top_clip.broadcaster_name }} · {{ twitch_pulse.top_clip.game_name }}</div>
+          </div>
+          <div class="tp-count">{{ "{:,}".format(twitch_pulse.top_clip.view_count) }} views</div>
+        </div>
+        {% else %}
+        <p style="color:var(--muted); font-size:13.5px;">No clips found in this date range.</p>
+        {% endif %}
+      </div>
+
+      <div class="tp-card">
+        <h4>🎮 Top Categories Right Now</h4>
+        {% for g in twitch_pulse.top_games[:6] %}
+        <div class="tp-row">
+          <div class="tp-name">{{ g.name }}</div>
+          <div class="tp-count">{{ "{:,}".format(g.viewer_count) }} viewers</div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="tp-grid">
+      <div class="tp-card">
+        <h4>👤 Top English-Language Streamers Right Now</h4>
+        {% for s in twitch_pulse.top_streams_en[:8] %}
+        <div class="tp-row">
+          <a href="{{ s.url }}" target="_blank" rel="noopener">
+            <div class="tp-name">{{ s.broadcaster_name }}</div>
+            <div class="tp-sub">{{ s.game_name }}</div>
+          </a>
+          <div class="tp-count">{{ "{:,}".format(s.viewer_count) }}</div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="tp-card">
+        <h4>🔥 Top Clips Leaderboard</h4>
+        {% for c in twitch_pulse.top_clips_leaderboard[:8] %}
+        <div class="tp-row">
+          <a href="{{ c.url }}" target="_blank" rel="noopener">
+            <div class="tp-name">{{ c.title }}</div>
+            <div class="tp-sub">{{ c.broadcaster_name }} · {{ c.game_name }}</div>
+          </a>
+          <div class="tp-count">{{ "{:,}".format(c.view_count) }}</div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- ================= MEME PULSE ================= -->
+  {% if meme_items %}
+  <section>
+    <div class="section-label">Meme Pulse (side note — not part of ranked events)</div>
+    <div class="meme-pulse-grid">
+      {% for m in meme_items %}
+      <a class="meme-card" href="{{ m.url }}" target="_blank" rel="noopener">
+        <div class="meme-media">{% if m.image_url %}<img src="{{ m.image_url }}" alt="">{% endif %}</div>
+        <div class="meme-body">
+          <div class="meme-title">{{ m.title }}</div>
+          <div class="meme-meta">r/{{ m.subreddit }} · {{ "{:,}".format(m.upvotes) }} upvotes</div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- ================= EDITORIAL SECTIONS ================= -->
+  <section>
+    <div class="section-label">Japan Hot Topics</div>
+    <div class="editorial-block">{{ analysis.japan_hot_topics }}</div>
+  </section>
+
+  <section>
+    <div class="section-label">USA Hot Topics</div>
+    <div class="editorial-block">{{ analysis.usa_hot_topics }}</div>
+  </section>
+
+  <section>
+    <div class="section-label">Japan × USA</div>
+    <div class="editorial-block">{{ analysis.japan_x_usa }}</div>
+  </section>
+
+  <section>
+    <div class="section-label">Trend Changes</div>
+    <div class="editorial-block">{{ analysis.trend_changes }}</div>
+  </section>
+
+  <!-- ================= SOURCES OVERVIEW (MOD debug info) ================= -->
+  <section>
+    <div class="section-label">Data Sources Overview</div>
+    <div class="sources-overview">
+      {% for s in source_summaries %}
+      <div class="src-box">
+        <div class="src-name">{{ s.source }}</div>
+        {{ "OK" if s.ok else "Failed" }} — {{ s.count }} items
+        {% if s.error %}<div>{{ s.error }}</div>{% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  Creator Intelligence Magazine · Internal MOD Tool · Not for redistribution of raw source data
+</footer>
+
+<script>
+function handleImgError(img) {
+  var fb = img.getAttribute('data-fallback');
+  if (fb) {
+    // 換成備用圖後，把 data-fallback 拿掉（避免重複嘗試同一張），
+    // 但故意「不」清掉 onerror——如果備用圖也載入失敗，還能再次
+    // 進到這個函式，最終落到下面的「顯示 placeholder」分支，
+    // 而不是留下一個難看的瀏覽器預設破圖圖示。
+    img.removeAttribute('data-fallback');
+    img.src = fb;
+    return;
+  }
+  img.style.display = 'none';
+  var container = img.closest('.event-media, .cover-media');
+  if (container) {
+    var ph = container.querySelector('.img-placeholder');
+    if (ph) { ph.style.display = 'flex'; }
+  }
+}
+</script>
+
+</body>
+</html>
