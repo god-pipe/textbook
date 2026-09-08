@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Creator Weekly Intelligence — Sample</title>
+
+<style>
+:root{
+  --bg:#0b0c10;
+  --card:#15171d;
+  --card2:#1c1f27;
+  --text:#f3f1eb;
+  --muted:#999ca5;
+  --accent:#ff5a5f;
+  --gold:#f4c95d;
+  --line:#292c34;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    "Noto Sans",
+    Arial,
+    sans-serif;
+  line-height:1.65;
+}
+
+a{
+  color:inherit;
+}
+
+img{
+  max-width:100%;
+  display:block;
+}
+
+.container{
+  width:min(100% - 32px, 980px);
+  margin:auto;
+}
+
+.cover{
+  min-height:78vh;
+  display:flex;
+  align-items:flex-end;
+  padding:48px 0;
+  border-bottom:1px solid var(--line);
+  background:
+    radial-gradient(circle at 75% 20%,rgba(255,90,95,.18),transparent 35%),
+    radial-gradient(circle at 20% 70%,rgba(244,201,93,.08),transparent 30%);
+}
+
+.cover-inner{
+  width:min(100%,900px);
+}
+
+.kicker{
+  color:var(--gold);
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  margin-bottom:18px;
+}
+
+h1{
+  margin:0;
+  font-size:clamp(48px,10vw,96px);
+  line-height:.92;
+  letter-spacing:-3px;
+}
+
+.cover-meta{
+  margin-top:24px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  color:var(--muted);
+  font-size:14px;
+}
+
+.issue{
+  background:var(--accent);
+  color:#180607;
+  padding:5px 12px;
+  border-radius:999px;
+  font-weight:700;
+}
+
+.intro{
+  max-width:680px;
+  margin-top:28px;
+  color:var(--muted);
+  font-size:15px;
+}
+
+section{
+  padding:58px 0 0;
+}
+
+.section-title{
+  display:inline-block;
+  margin-bottom:22px;
+  color:var(--gold);
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:2.5px;
+  text-transform:uppercase;
+  border-bottom:2px solid var(--gold);
+  padding-bottom:6px;
+}
+
+.pulse{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+}
+
+.pulse-card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:16px;
+}
+
+.pulse-label{
+  color:var(--muted);
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  margin-bottom:7px;
+}
+
+.pulse-value{
+  font-size:15px;
+  font-weight:600;
+}
+
+.story{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:16px;
+  overflow:hidden;
+  margin-bottom:20px;
+}
+
+.story-image{
+  aspect-ratio:16/8;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:
+    linear-gradient(135deg,#20232c,#111319);
+  color:#777b86;
+  font-size:12px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+}
+
+.story-body{
+  padding:24px;
+}
+
+.tag{
+  color:var(--accent);
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  margin-bottom:8px;
+}
+
+.story h2{
+  margin:0 0 12px;
+  font-size:clamp(23px,4vw,34px);
+  line-height:1.2;
+}
+
+.summary{
+  color:var(--muted);
+  margin:0 0 20px;
+  font-size:15px;
+}
+
+.insight{
+  border-top:1px solid var(--line);
+  padding-top:18px;
+}
+
+.insight-row{
+  margin-bottom:16px;
+}
+
+.insight-label{
+  color:var(--gold);
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  margin-bottom:3px;
+}
+
+.insight-text{
+  font-size:14px;
+}
+
+.source{
+  display:inline-block;
+  margin-top:8px;
+  color:var(--accent);
+  text-decoration:none;
+  font-size:13px;
+  font-weight:600;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:18px;
+}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:14px;
+  overflow:hidden;
+}
+
+.card-image{
+  aspect-ratio:16/8;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--card2);
+  color:#70747e;
+  font-size:11px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+}
+
+.card-body{
+  padding:20px;
+}
+
+.card-tag{
+  color:var(--gold);
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+}
+
+.card h3{
+  margin:8px 0 10px;
+  font-size:19px;
+  line-height:1.3;
+}
+
+.card p{
+  margin:0;
+  color:var(--muted);
+  font-size:14px;
+}
+
+.editorial{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:22px;
+  color:var(--muted);
+  font-size:15px;
+}
+
+footer{
+  margin-top:70px;
+  padding:30px 0;
+  border-top:1px solid var(--line);
+  color:#6f727b;
+  text-align:center;
+  font-size:12px;
+}
+
+@media(max-width:700px){
+
+  .container{
+    width:min(100% - 24px,980px);
+  }
+
+  .cover{
+    min-height:70vh;
+    padding:36px 0;
+  }
+
+  h1{
+    letter-spacing:-2px;
+  }
+
+  .pulse{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .story-body{
+    padding:20px;
+  }
+
+  section{
+    padding-top:44px;
+  }
+}
+
+@media(max-width:420px){
+
+  .pulse{
+    grid-template-columns:1fr;
+  }
+
+  .cover-meta{
+    font-size:13px;
+  }
+
+  .intro{
+    font-size:14px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- COVER -->
+
+<header class="cover">
+  <div class="container">
+    <div class="cover-inner">
+
+      <div class="kicker">
+        Creator Intelligence
+      </div>
+
+      <h1>
+        Creator<br>
+        Weekly
+      </h1>
+
+      <div class="cover-meta">
+        <span class="issue">
+          SAMPLE EDITION
+        </span>
+        <span>
+          August 30 — September 6, 2026
+        </span>
+      </div>
+
+      <p class="intro">
+        A simple weekly briefing covering the stories,
+        conversations and trends that may matter to creators.
+      </p>
+
+    </div>
+  </div>
+</header>
+
+
+<main class="container">
+
+<!-- WEEKLY PULSE -->
+
+<section>
+
+  <div class="section-title">
+    This Week's Pulse
+  </div>
+
+  <div class="pulse">
+
+    <div class="pulse-card">
+      <div class="pulse-label">
+        Top Trend
+      </div>
+      <div class="pulse-value">
+        Cross-cultural creator content
+      </div>
+    </div>
+
+    <div class="pulse-card">
+      <div class="pulse-label">
+        Platform
+      </div>
+      <div class="pulse-value">
+        YouTube
+      </div>
+    </div>
+
+    <div class="pulse-card">
+      <div class="pulse-label">
+        Topic
+      </div>
+      <div class="pulse-value">
+        Japan × US
+      </div>
+    </div>
+
+    <div class="pulse-card">
+      <div class="pulse-label">
+        Emerging
+      </div>
+      <div class="pulse-value">
+        AI & language learning
+      </div>
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- PERIOD SUMMARY -->
+
+<section>
+
+  <div class="section-title">
+    Weekly Overview
+  </div>
+
+  <div class="editorial">
+    This sample edition highlights several conversations
+    surrounding creators, online culture and Japan-related
+    content. The purpose of the report is to give a quick
+    overview of what may be worth paying attention to this week.
+  </div>
+
+</section>
+
+
+<!-- FEATURED STORY -->
+
+<section>
+
+  <div class="section-title">
+    Featured Story
+  </div>
+
+  <article class="story">
+
+    <div class="story-image">
+      Sample Story Image
+    </div>
+
+    <div class="story-body">
+
+      <div class="tag">
+        Featured
+      </div>
+
+      <h2>
+        American Dad's First Day in Japan
+        Video Gets People Talking
+      </h2>
+
+      <p class="summary">
+        A family travel video featuring a first-time
+        experience in Tokyo attracted attention around
+        everyday Japanese customs and public etiquette.
+      </p>
+
+      <div class="insight">
+
+        <div class="insight-row">
+          <div class="insight-label">
+            What happened
+          </div>
+
+          <div class="insight-text">
+            A travel video sparked discussion after viewers
+            reacted to the differences between everyday life
+            in Japan and the United States.
+          </div>
+        </div>
+
+        <div class="insight-row">
+          <div class="insight-label">
+            Why it matters
+          </div>
+
+          <div class="insight-text">
+            Cross-cultural experiences continue to attract
+            viewers because they create an easy entry point
+            for discussion and explanation.
+          </div>
+        </div>
+
+        <div class="insight-row">
+          <div class="insight-label">
+            Creator angle
+          </div>
+
+          <div class="insight-text">
+            Similar topics could provide opportunities for
+            commentary, cultural explanation or educational
+            content.
+          </div>
+        </div>
+
+      </div>
+
+      <a
+        class="source"
+        href="https://www.youtube.com/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        View example source ↗
+      </a>
+
+    </div>
+
+  </article>
+
+</section>
+
+
+<!-- MORE STORIES -->
+
+<section>
+
+  <div class="section-title">
+    More Stories
+  </div>
+
+  <div class="grid">
+
+    <article class="card">
+
+      <div class="card-image">
+        Sample Image
+      </div>
+
+      <div class="card-body">
+
+        <div class="card-tag">
+          Japan × US
+        </div>
+
+        <h3>
+          Japanese Snack Culture Sparks
+          an Unexpected Conversation
+        </h3>
+
+        <p>
+          A casual food-related stream turned into a
+          discussion about etiquette and cultural differences.
+        </p>
+
+      </div>
+
+    </article>
+
+
+    <article class="card">
+
+      <div class="card-image">
+        Sample Image
+      </div>
+
+      <div class="card-body">
+
+        <div class="card-tag">
+          Community
+        </div>
+
+        <h3>
+          Online Communities Discuss
+          Everyday Life in Japan
+        </h3>
+
+        <p>
+          Several conversations focused on the small
+          cultural details that visitors notice first.
+        </p>
+
+      </div>
+
+    </article>
+
+
+    <article class="card">
+
+      <div class="card-image">
+        Sample Image
+      </div>
+
+      <div class="card-body">
+
+        <div class="card-tag">
+          AI
+        </div>
+
+        <h3>
+          AI Tools Are Changing
+          How Fans Learn Japanese
+        </h3>
+
+        <p>
+          New language tools continue to generate curiosity
+          among international audiences.
+        </p>
+
+      </div>
+
+    </article>
+
+
+    <article class="card">
+
+      <div class="card-image">
+        Sample Image
+      </div>
+
+      <div class="card-body">
+
+        <div class="card-tag">
+          Creator Trend
+        </div>
+
+        <h3>
+          VTuber Collaborations Continue
+          to Cross Audience Boundaries
+        </h3>
+
+        <p>
+          Collaborations between different creator communities
+          remain an interesting source of audience crossover.
+        </p>
+
+      </div>
+
+    </article>
+
+  </div>
+
+</section>
+
+
+<!-- EDITORIAL -->
+
+<section>
+
+  <div class="section-title">
+    Japan
+  </div>
+
+  <div class="editorial">
+    Everyday culture, language and travel experiences
+    remained recurring subjects in conversations involving
+    international audiences.
+  </div>
+
+</section>
+
+
+<section>
+
+  <div class="section-title">
+    United States
+  </div>
+
+  <div class="editorial">
+    First-person experiences and culture-comparison content
+    continued to attract attention from viewers interested
+    in Japan.
+  </div>
+
+</section>
+
+
+<section>
+
+  <div class="section-title">
+    Looking Ahead
+  </div>
+
+  <div class="editorial">
+    The coming week may be worth watching for follow-up
+    videos, creator collaborations and new conversations
+    around Japan-related content.
+  </div>
+
+</section>
+
+</main>
+
+
+<footer>
+  Creator Weekly Intelligence · Sample Edition
+</footer>
+
+</body>
+</html>
